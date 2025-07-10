@@ -24,7 +24,9 @@ app.post("/api/chat", async (req, res) => {
       {
         headers: {
           "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "HTTP-Referer": "http://localhost:3000", // penting untuk OpenRouter
+          "X-Title": "xxzzyyAI"
         }
       }
     );
@@ -32,11 +34,11 @@ app.post("/api/chat", async (req, res) => {
     const reply = response.data.choices[0].message.content;
     res.json({ reply });
   } catch (error) {
-    console.error("Error:", error.message);
+    console.error("OpenRouter Error:", error.response?.status, error.response?.data || error.message);
     res.status(500).json({ reply: "Maaf, terjadi kesalahan saat menjawab." });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server berjalan di http://localhost:${PORT}`);
 });
